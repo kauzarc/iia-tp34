@@ -46,7 +46,7 @@ public class DominosBoard implements IBoard<DominosMove, DominosRole, DominosBoa
 
 	// ------------------- Getters / Setters -------------------
 
-	protected int retGridSize(int n) {
+	protected int getGridSize(int n) {
 		return GRID_SIZE;
 	}
 
