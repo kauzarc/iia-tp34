@@ -103,7 +103,6 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		Role opponent = this.getOpponentRole(playerRole);
 		Move best_move = null;
 		for (Move move : possibleMoves) {
-			// System.out.println(move + " -> alpha: " + alpha + ", beta: " + beta);
 			Board newBoard = board.play(move, playerRole);
 			Tuple<Integer, Move> result = this.negAlphaBeta(newBoard, opponent, depth + 1, -beta, -alpha, -p);
 			if (-result.first > alpha) {
@@ -115,7 +114,6 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 				return new Tuple<>(beta, best_move);
 			}
 		}
-		// System.out.println(best_move + " -> alpha: " + alpha + ", beta: " + beta);
 		return new Tuple<>(alpha, best_move);
 	}
 }
