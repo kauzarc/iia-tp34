@@ -110,7 +110,6 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 				best_move = move;
 			}
 			if (alpha >= beta) {
-				System.out.println("cut");
 				return new Tuple<>(beta, best_move);
 			}
 		}
