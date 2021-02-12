@@ -4,9 +4,9 @@ import iialib.games.model.IMove;
 
 public class OtherGameMove implements IMove {
 
-	public final String value;
+    public final String value;
 
-    OtherGameMove(String value){
+    OtherGameMove(String value) {
         this.value = value;
     }
 

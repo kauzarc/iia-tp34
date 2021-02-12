@@ -1,5 +1,7 @@
 package games.awale;
 
-public class AwaleRole {
-    
+import iialib.games.model.IRole;
+
+public enum AwaleRole implements IRole {
+    // TODO
 }

@@ -1,5 +1,7 @@
 package games.awale;
 
-public class AwaleMove {
-    
+import iialib.games.model.IMove;
+
+public class AwaleMove implements IMove {
+    // TODO
 }

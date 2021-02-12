@@ -1,7 +1,6 @@
 package games.dominos;
 
 import iialib.games.model.IBoard;
-import iialib.games.model.Player;
 import iialib.games.model.Score;
 
 import java.util.ArrayList;
@@ -37,7 +36,6 @@ public class DominosBoard implements IBoard<DominosMove, DominosRole, DominosBoa
 		boardGrid = other.copyGrid();
 	}
 
-	
 	private DominosBoard(SQUARE[][] other) {
 		boardGrid = new SQUARE[GRID_SIZE][GRID_SIZE];
 		for (int i = 0; i < GRID_SIZE; i++)
@@ -97,11 +95,10 @@ public class DominosBoard implements IBoard<DominosMove, DominosRole, DominosBoa
 
 	// --------------------- Other Methods ---------------------
 
-
 	private ArrayList<DominosMove> freeVerticalMoves() {
 		ArrayList<DominosMove> allPossibleMoves = new ArrayList<>();
-		for (int i = 0; i < GRID_SIZE- 1; i++) { 			// lines
-			for (int j = 0; j < GRID_SIZE ; j++) { 	// columns
+		for (int i = 0; i < GRID_SIZE - 1; i++) { // lines
+			for (int j = 0; j < GRID_SIZE; j++) { // columns
 				if ((boardGrid[i][j] == SQUARE.EMPTY) && (boardGrid[i + 1][j] == SQUARE.EMPTY)) // possible move
 					allPossibleMoves.add(new DominosMove(i, j));
 			}
@@ -111,9 +108,9 @@ public class DominosBoard implements IBoard<DominosMove, DominosRole, DominosBoa
 
 	private ArrayList<DominosMove> freeHorizontalMoves() {
 		ArrayList<DominosMove> allPossibleMoves = new ArrayList<>();
-		for (int i = 0; i < GRID_SIZE; i++) { 		// lines
-			for (int j = 0; j < GRID_SIZE - 1; j++) { 		// columns
-				if ((boardGrid[i][j] == SQUARE.EMPTY) && (boardGrid[i ][j+ 1] == SQUARE.EMPTY)) // possible move
+		for (int i = 0; i < GRID_SIZE; i++) { // lines
+			for (int j = 0; j < GRID_SIZE - 1; j++) { // columns
+				if ((boardGrid[i][j] == SQUARE.EMPTY) && (boardGrid[i][j + 1] == SQUARE.EMPTY)) // possible move
 					allPossibleMoves.add(new DominosMove(i, j));
 			}
 		}
@@ -167,18 +164,16 @@ public class DominosBoard implements IBoard<DominosMove, DominosRole, DominosBoa
 	@Override
 	public ArrayList<Score<DominosRole>> getScores() {
 		ArrayList<Score<DominosRole>> scores = new ArrayList<Score<DominosRole>>();
-		if(this.isGameOver()) {
+		if (this.isGameOver()) {
 			if (nbHorizontalMoves() == 0) {
-				scores.add(new Score<DominosRole>(DominosRole.HORIZONTAL,Score.Status.LOOSE,0));
-				scores.add(new Score<DominosRole>(DominosRole.VERTICAL,Score.Status.WIN,1));
+				scores.add(new Score<DominosRole>(DominosRole.HORIZONTAL, Score.Status.LOOSE, 0));
+				scores.add(new Score<DominosRole>(DominosRole.VERTICAL, Score.Status.WIN, 1));
+			} else {
+				scores.add(new Score<DominosRole>(DominosRole.HORIZONTAL, Score.Status.WIN, 1));
+				scores.add(new Score<DominosRole>(DominosRole.VERTICAL, Score.Status.LOOSE, 0));
 			}
-			else {
-				scores.add(new Score<DominosRole>(DominosRole.HORIZONTAL,Score.Status.WIN,1));
-				scores.add(new Score<DominosRole>(DominosRole.VERTICAL,Score.Status.LOOSE,0));
-			}
-		}
-		else {
-			//TODO
+		} else {
+			// TODO
 		}
 		return scores;
 	}

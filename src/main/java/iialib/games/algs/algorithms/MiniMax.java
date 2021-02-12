@@ -9,40 +9,47 @@ import iialib.games.model.IRole;
 import java.util.*;
 import java.util.ArrayList;
 
-public class MiniMax<Move extends IMove,Role extends IRole,Board extends IBoard<Move,Role,Board>> implements GameAlgorithm<Move,Role,Board> {
+public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoard<Move, Role, Board>>
+		implements GameAlgorithm<Move, Role, Board> {
 
 	// Constants
-	/** Defaut value for depth limit
-     */
+	/**
+	 * Defaut value for depth limit
+	 */
 	private final static int DEPTH_MAX_DEFAUT = 4;
 
 	// Attributes
-	/** Role of the max player
-     */
+	/**
+	 * Role of the max player
+	 */
 	private final Role playerMaxRole;
 
-	/** Role of the min player
-     */
+	/**
+	 * Role of the min player
+	 */
 	private final Role playerMinRole;
 
-	/** Algorithm max depth
-     */
+	/**
+	 * Algorithm max depth
+	 */
 	private int depthMax = DEPTH_MAX_DEFAUT;
 	private int depth;
 
-
-	/** Heuristic used by the max player
-     */
+	/**
+	 * Heuristic used by the max player
+	 */
 	private IHeuristic<Board, Role> h;
 
 	//
-	/** number of internal visited (developed) nodes (for stats)
-     */
+	/**
+	 * number of internal visited (developed) nodes (for stats)
+	 */
 	private int nbNodes;
 
-	/** number of leaves nodes nodes (for stats)
-
-     */
+	/**
+	 * number of leaves nodes nodes (for stats)
+	 * 
+	 */
 	private int nbLeaves;
 
 	// --------- Constructors ---------
@@ -101,7 +108,7 @@ public class MiniMax<Move extends IMove,Role extends IRole,Board extends IBoard<
 	private int algoMaxMin(Board board, Move move) {
 		board = board.play(move, this.playerMaxRole);
 		ArrayList<Move> moves = board.possibleMoves(this.playerMinRole);
-		if((this.depth == 0) || (moves.size() <= 1)) {
+		if ((this.depth == 0) || (moves.size() <= 1)) {
 			this.nbLeaves++;
 			return this.h.eval(board, this.playerMinRole);
 		} else {
@@ -123,7 +130,7 @@ public class MiniMax<Move extends IMove,Role extends IRole,Board extends IBoard<
 	private int algoMinMax(Board board, Move move) {
 		board = board.play(move, this.playerMinRole);
 		ArrayList<Move> moves = board.possibleMoves(this.playerMaxRole);
-		if((this.depth == 0) || (moves.size() <= 1)) {
+		if ((this.depth == 0) || (moves.size() <= 1)) {
 			this.nbLeaves++;
 			return this.h.eval(board, this.playerMaxRole);
 		} else {

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import iialib.games.algs.AIPlayer;
 import iialib.games.algs.AbstractGame;
 import iialib.games.algs.GameAlgorithm;
-import iialib.games.algs.algorithms.MiniMax;
 import iialib.games.algs.algorithms.AlphaBeta;
 
 public class OtherGame extends AbstractGame<OtherGameMove, OtherGameRole, OtherGameBoard> {

@@ -3,7 +3,7 @@ package games.dominos;
 import iialib.games.algs.IHeuristic;
 
 public class DominosHeuristics {
-  
+
 	public static IHeuristic<DominosBoard, DominosRole> hVertical = (board, role) -> {
 		return board.nbVerticalMoves() - board.nbHorizontalMoves();
 	};
