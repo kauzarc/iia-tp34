@@ -5,8 +5,6 @@ import iialib.games.algs.IHeuristic;
 import iialib.games.model.IBoard;
 import iialib.games.model.IMove;
 import iialib.games.model.IRole;
-import games.dominos.DominosBoard;
-import games.dominos.DominosMove;
 
 import java.util.*;
 import java.util.ArrayList;
