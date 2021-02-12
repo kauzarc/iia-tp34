@@ -31,10 +31,10 @@ public class OtherGame extends AbstractGame<OtherGameMove, OtherGameRole, OtherG
 		// roleV, algV);
 
 		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algV = new AlphaBeta<OtherGameMove, OtherGameRole, OtherGameBoard>(
-				roleP2, roleP1, OtherGameHeuristics.h, 4); // AlphaBeta depth 4
+				roleP2, roleP1, OtherGameHeuristics.p1, 3); // AlphaBeta depth 4
 
 		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algH = new AlphaBeta<OtherGameMove, OtherGameRole, OtherGameBoard>(
-				roleP2, roleP1, OtherGameHeuristics.h, 2); // AlphaBeta depth 2
+				roleP2, roleP1, OtherGameHeuristics.p2, 2); // AlphaBeta depth 2
 
 		AIPlayer<OtherGameMove, OtherGameRole, OtherGameBoard> playerV = new AIPlayer<OtherGameMove, OtherGameRole, OtherGameBoard>(
 				roleP1, algV);
