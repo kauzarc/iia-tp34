@@ -175,10 +175,10 @@ public class DominosBoard implements IBoard<DominosMove, DominosRole, DominosBoa
 			else {
 				scores.add(new Score<DominosRole>(DominosRole.HORIZONTAL,Score.Status.WIN,1));
 				scores.add(new Score<DominosRole>(DominosRole.VERTICAL,Score.Status.LOOSE,0));
-			}			
+			}
 		}
 		else {
-			
+			//TODO
 		}
 		return scores;
 	}
