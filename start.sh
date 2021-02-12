@@ -1,1 +1,0 @@
-java -cp build/libs/iialib.jar games.dominos.DominosGame
