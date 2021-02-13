@@ -28,10 +28,10 @@ public class DominosGame extends AbstractGame<DominosMove, DominosRole, DominosB
 		// roleH, roleV, DominosHeuristics.hHorizontal, 4); // Minimax depth 2
 
 		GameAlgorithm<DominosMove, DominosRole, DominosBoard> algV = new AlphaBeta<>(roleH, roleV,
-				DominosHeuristics.hVertical, 2); // AlphaBeta depth 2
+				DominosHeuristics.hVertical, 1); // AlphaBeta depth 2
 
 		GameAlgorithm<DominosMove, DominosRole, DominosBoard> algH = new AlphaBeta<>(roleV, roleH,
-				DominosHeuristics.hHorizontal, 10); // AlphaBeta depth 2
+				DominosHeuristics.hHorizontal, 5); // AlphaBeta depth 2
 
 		AIPlayer<DominosMove, DominosRole, DominosBoard> playerV = new AIPlayer<>(roleV, algV);
 
@@ -39,8 +39,8 @@ public class DominosGame extends AbstractGame<DominosMove, DominosRole, DominosB
 
 		ArrayList<AIPlayer<DominosMove, DominosRole, DominosBoard>> players = new ArrayList<AIPlayer<DominosMove, DominosRole, DominosBoard>>();
 
-		players.add(playerH); // Second Player
 		players.add(playerV); // First Player
+		players.add(playerH); // Second Player
 
 		// Setting the initial Board
 		DominosBoard initialBoard = new DominosBoard();

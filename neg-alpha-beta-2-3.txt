@@ -1,0 +1,90 @@
+Game begining - First player is : PLAYER1
+The board is :
+20
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+19
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+18
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+17
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+16
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+15
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+14
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+13
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+12
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+11
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+10
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+9
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+8
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+7
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 2 allumette(s)
+The board is :
+5
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+4
+Next player is  :PLAYER2
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 3 allumette(s)
+The board is :
+1
+Next player is  :PLAYER1
+[NegAlphaBeta]
+Best Move is :Le joueur enlève 1 allumette(s)
+The board is :
+0
+Game over !
+PLAYER2 score is : WIN 1
