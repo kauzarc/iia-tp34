@@ -3,5 +3,6 @@ package games.awale;
 import iialib.games.model.IRole;
 
 public enum AwaleRole implements IRole {
-    // TODO
+    PLAYER1,
+    PLAYER2
 }

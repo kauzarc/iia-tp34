@@ -11,5 +11,4 @@ public class OtherGameHeuristics {
 			return 0;
 		}
 	};
-
 }

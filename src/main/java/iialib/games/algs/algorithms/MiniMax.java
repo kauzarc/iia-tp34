@@ -30,7 +30,7 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 	private final Role playerMinRole;
 
 	/**
-	 * Algorithm max depth
+	 * Algorithm max depth et depth
 	 */
 	private int depthMax = DEPTH_MAX_DEFAUT;
 	private int depth;
@@ -48,7 +48,7 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 
 	/**
 	 * number of leaves nodes nodes (for stats)
-	 * 
+	 *
 	 */
 	private int nbLeaves;
 
@@ -60,7 +60,6 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 		this.h = h;
 	}
 
-	//
 	public MiniMax(Role playerMaxRole, Role playerMinRole, IHeuristic<Board, Role> h, int depthMax) {
 		this(playerMaxRole, playerMinRole, h);
 		this.depthMax = depthMax;
@@ -72,26 +71,20 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 
 	@Override
 	public Move bestMove(Board board, Role playerRole) {
-		System.out.println("[MiniMax]");
-
-		this.depth = this.depthMax;
 		ArrayList<Move> moves = board.possibleMoves(playerRole);
-		Move firstMove = moves.get(0);
-		int max = this.algoMaxMin(board, firstMove);
-		Move bestMove = firstMove;
+		int max = IHeuristic.MIN_VALUE;
+		Move best_move = null;
 
 		Iterator<Move> iter = moves.iterator();
-		while (iter.hasNext() && this.depth > 0) {
-			this.depth--;
+		while (iter.hasNext()) {
 			Move currentMove = iter.next();
-			int newVal = this.algoMaxMin(board, currentMove);
+			int newVal = this.minMax(board.play(currentMove, playerRole), playerRole, true);
 			if (newVal > max) {
-				bestMove = currentMove;
 				max = newVal;
+				best_move = currentMove;
 			}
-			this.depth = this.depthMax;
 		}
-		return bestMove;
+		return best_move;
 	}
 
 	/*
@@ -105,47 +98,79 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 	/*
 	 * PRIVATE METHODS ===============
 	 */
-	private int algoMaxMin(Board board, Move move) {
-		board = board.play(move, this.playerMaxRole);
-		ArrayList<Move> moves = board.possibleMoves(this.playerMinRole);
-		if ((this.depth == 0) || (moves.size() <= 1)) {
+
+	private Role getOpponentRole(Role playerRole) {
+		return playerRole == this.playerMinRole ? this.playerMaxRole : this.playerMinRole;
+	}
+
+	private int minMax(Board board, Role playerRole, boolean min_or_max) {
+		ArrayList<Move> moves = board.possibleMoves(playerRole);
+		this.nbNodes++;
+
+		if((this.depth == 0) || board.isGameOver()) {
 			this.nbLeaves++;
-			return this.h.eval(board, this.playerMinRole);
+			return this.h.eval(board, playerRole);
 		} else {
-			this.depth--;
-			this.nbNodes++;
-			int depthTemp = this.depth;
-			int max = IHeuristic.MIN_VALUE;
+			int val = (min_or_max ? IHeuristic.MIN_VALUE : IHeuristic.MAX_VALUE);
 
 			Iterator<Move> iter = moves.iterator();
 			while (iter.hasNext()) {
-				int min = this.algoMinMax(board, iter.next());
-				max = Math.max(max, min);
+				this.depth--;
+				int depthTemp = this.depth;
+				Move currentMove = iter.next();
+				Board currentboard = board.play(currentMove, playerRole);
+				boolean inv = !min_or_max;
+				int currentVal = this.minMax(currentboard, getOpponentRole(playerRole), inv);
+				val = (min_or_max ? Math.max(val, currentVal) : Math.max(val, currentVal));
 				this.depth = depthTemp;
 			}
-			return max;
+			return val;
 		}
 	}
 
-	private int algoMinMax(Board board, Move move) {
-		board = board.play(move, this.playerMinRole);
-		ArrayList<Move> moves = board.possibleMoves(this.playerMaxRole);
-		if ((this.depth == 0) || (moves.size() <= 1)) {
-			this.nbLeaves++;
-			return this.h.eval(board, this.playerMaxRole);
-		} else {
-			this.depth--;
-			this.nbNodes++;
-			int depthTemp = this.depth;
-			int min = IHeuristic.MAX_VALUE;
 
-			Iterator<Move> iter = moves.iterator();
-			while (iter.hasNext()) {
-				int max = this.algoMaxMin(board, iter.next());
-				min = Math.min(min, max);
-				this.depth = depthTemp;
-			}
-			return min;
-		}
-	}
+
+	// private int algoMaxMin(Board board) {
+	// 	this.nbNodes++;
+	// 	if((this.depth == 0) || board.isGameOver()) {
+	// 		this.nbLeaves++;
+	// 		return this.h.eval(board, this.playerMaxRole);
+	// 	} else {
+	// 		this.depth--;
+	// 		int depthTemp = this.depth;
+	// 		int max = IHeuristic.MIN_VALUE;
+	// 		ArrayList<Move> moves = board.possibleMoves(this.playerMinRole);
+
+	// 		Iterator<Move> iter = moves.iterator();
+	// 		while (iter.hasNext()) {
+	// 			Currentboard = board.play(move, this.playerMaxRole);
+	// 			int min = this.algoMinMax(Currentboard);
+	// 			max = Math.max(max, min);
+	// 			this.depth = depthTemp;
+	// 		}
+	// 		return max;
+	// 	}
+	// }
+
+	// private int algoMinMax(Board board) {
+	// 	board = board.play(move, this.playerMinRole);
+	// 	if((this.depth == 0) || board.isGameOver()) {
+	// 		this.nbLeaves++;
+	// 		return this.h.eval(board, this.playerMinRole);
+	// 	} else {
+	// 		this.depth--;
+	// 		this.nbNodes++;
+	// 		int depthTemp = this.depth;
+	// 		int min = IHeuristic.MAX_VALUE;
+	// 		ArrayList<Move> moves = board.possibleMoves(this.playerMaxRole);
+
+	// 		Iterator<Move> iter = moves.iterator();
+	// 		while (iter.hasNext()) {
+	// 			int max = this.algoMaxMin(board, iter.next());
+	// 			min = Math.min(min, max);
+	// 			this.depth = depthTemp;
+	// 		}
+	// 		return min;
+	// 	}
+	// }
 }

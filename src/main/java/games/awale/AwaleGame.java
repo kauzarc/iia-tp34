@@ -12,7 +12,7 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
     }
 
     public static void main(String[] args) {
-        // TODO
+        
     }
 
 }
