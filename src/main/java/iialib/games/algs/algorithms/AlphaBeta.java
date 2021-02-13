@@ -80,9 +80,11 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 	public Move bestMove(Board board, Role playerRole) {
 		System.out.println("[AlphaBeta]");
 
-		ABResult result = this.negAlphaBeta(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE);
+		ABResult result = this.negAlphaBeta(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE, 1);
 		if (result.best_move == null) {
-			return board.possibleMoves(playerRole).get(0);
+			ArrayList<Move> moves = board.possibleMoves(playerRole);
+			int move_index = (int) (Math.random() * moves.size());
+			return moves.get(move_index);
 		}
 		return result.best_move;
 	}
@@ -102,11 +104,11 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		return playerRole == this.playerMinRole ? this.playerMaxRole : this.playerMinRole;
 	}
 
-	private ABResult negAlphaBeta(Board board, Role playerRole, int depth, int alpha, int beta) {
+	private ABResult negAlphaBeta(Board board, Role playerRole, int depth, int alpha, int beta, int p) {
 		++this.nbNodes;
 		if (depth >= this.depthMax || board.isGameOver()) {
 			++this.nbLeaves;
-			return new ABResult(this.h.eval(board, playerRole), null);
+			return new ABResult(p * this.h.eval(board, playerRole), null);
 		}
 
 		ArrayList<Move> possibleMoves = board.possibleMoves(playerRole);
@@ -114,7 +116,10 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		Move best_move = null;
 		for (Move move : possibleMoves) {
 			Board newBoard = board.play(move, playerRole);
-			ABResult result = this.negAlphaBeta(newBoard, opponent, depth + 1, -beta, -alpha);
+			ABResult result = this.negAlphaBeta(newBoard, opponent, depth + 1, -beta, -alpha, -1 * p);
+			// System.out.println(depth + " > move: " + move + ", player: " + playerRole +
+			// ", result: " + (-result.best_alpha)
+			// + ", for move: " + result.best_move);
 			if (-result.best_alpha > alpha) {
 				alpha = -result.best_alpha;
 				best_move = move;
