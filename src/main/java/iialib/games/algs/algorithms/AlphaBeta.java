@@ -79,6 +79,13 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 	@Override
 	public Move bestMove(Board board, Role playerRole) {
 		System.out.println("[AlphaBeta]");
+		System.out.println("Les différents moves possible");
+		ArrayList<Move> movesPossible = board.possibleMoves(playerRole);
+		for (Move move : movesPossible) {
+			System.out.println(move);
+		}
+		System.out.println("fin");
+
 
 		Result result = this.alphaBetaMaxMin(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE);
 		if (result.bestMove == null) {

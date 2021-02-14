@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import iialib.games.algs.AIPlayer;
 import iialib.games.algs.AbstractGame;
+import iialib.games.algs.GameAlgorithm;
+import iialib.games.algs.algorithms.AlphaBeta;
+import iialib.games.algs.algorithms.MiniMax;
+import iialib.games.algs.algorithms.Human;
 
 public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
 
@@ -12,7 +16,25 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
     }
 
     public static void main(String[] args) {
-        
-    }
+        AwaleRole role1 = AwaleRole.PLAYER1;
+		AwaleRole role2 = AwaleRole.PLAYER2;
 
+        GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg1 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
+            role1, role2, AwaleHeuristics.player1, 2);
+		GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg2 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
+            role2, role1, AwaleHeuristics.player2, 2);
+
+        AIPlayer<AwaleMove, AwaleRole, AwaleBoard> player1 = new AIPlayer<AwaleMove, AwaleRole, AwaleBoard>(role1, alg1);
+        AIPlayer<AwaleMove, AwaleRole, AwaleBoard> player2 = new AIPlayer<AwaleMove, AwaleRole, AwaleBoard>(role2, alg2);
+
+        ArrayList<AIPlayer<AwaleMove, AwaleRole, AwaleBoard>> players = new ArrayList<AIPlayer<AwaleMove, AwaleRole, AwaleBoard>>();
+
+		players.add(player1);
+		players.add(player2);
+
+		AwaleBoard initialBoard = new AwaleBoard();
+
+		AwaleGame game = new AwaleGame(players, initialBoard);
+		game.runGame();
+    }
 }
