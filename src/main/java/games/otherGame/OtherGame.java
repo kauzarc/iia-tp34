@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import iialib.games.algs.AIPlayer;
 import iialib.games.algs.AbstractGame;
 import iialib.games.algs.GameAlgorithm;
+import iialib.games.algs.algorithms.NegAlphaBeta;
 import iialib.games.algs.algorithms.AlphaBeta;
 import iialib.games.algs.algorithms.MiniMax;
+import iialib.games.algs.algorithms.NegaMax;
+import iialib.games.algs.algorithms.Human;
 
 public class OtherGame extends AbstractGame<OtherGameMove, OtherGameRole, OtherGameBoard> {
 
@@ -19,22 +22,11 @@ public class OtherGame extends AbstractGame<OtherGameMove, OtherGameRole, OtherG
 		OtherGameRole roleP1 = OtherGameRole.PLAYER_ONE;
 		OtherGameRole roleP2 = OtherGameRole.PLAYER_TWO;
 
-		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algV = new
-		MiniMax<OtherGameMove, OtherGameRole, OtherGameBoard>(
-		roleP1, roleP2, OtherGameHeuristics.h, 3); // Minimax depth 4
-
-		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algH = new
-		MiniMax<OtherGameMove, OtherGameRole, OtherGameBoard>(
-		roleP1, roleP2, OtherGameHeuristics.h, 3); // Minimax depth 2
-
-		// GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algV = new AlphaBeta<OtherGameMove, OtherGameRole, OtherGameBoard>(
-		// 		roleP2, roleP1, OtherGameHeuristics.h, 4); // AlphaBeta depth 4
-
 		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algV = new AlphaBeta<OtherGameMove, OtherGameRole, OtherGameBoard>(
-				roleP2, roleP1, OtherGameHeuristics.p1, 3); // AlphaBeta depth 4
+				roleP2, roleP1, OtherGameHeuristics.p1, 2); // AlphaBeta depth 2
 
 		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algH = new AlphaBeta<OtherGameMove, OtherGameRole, OtherGameBoard>(
-				roleP2, roleP1, OtherGameHeuristics.p2, 2); // AlphaBeta depth 2
+				roleP2, roleP1, OtherGameHeuristics.p2, 3); // AlphaBeta depth 3
 
 		AIPlayer<OtherGameMove, OtherGameRole, OtherGameBoard> playerV = new AIPlayer<OtherGameMove, OtherGameRole, OtherGameBoard>(
 				roleP1, algV);

@@ -8,15 +8,15 @@ import iialib.games.model.IRole;
 
 import java.util.ArrayList;
 
-public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoard<Move, Role, Board>>
+public class NegaMax<Move extends IMove, Role extends IRole, Board extends IBoard<Move, Role, Board>>
 		implements GameAlgorithm<Move, Role, Board> {
 
 	private class Result {
-		public int minOrMax;
+		public int maxValue;
 		public Move bestMove;
 
-		public Result(int minOrMax, Move bestMove) {
-			this.minOrMax = minOrMax;
+		public Result(int maxValue, Move bestMove) {
+			this.maxValue = maxValue;
 			this.bestMove = bestMove;
 		}
 	}
@@ -62,13 +62,13 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 
 	// --------- Constructors ---------
 
-	public MiniMax(Role playerMaxRole, Role playerMinRole, IHeuristic<Board, Role> h) {
+	public NegaMax(Role playerMaxRole, Role playerMinRole, IHeuristic<Board, Role> h) {
 		this.playerMaxRole = playerMaxRole;
 		this.playerMinRole = playerMinRole;
 		this.h = h;
 	}
 
-	public MiniMax(Role playerMaxRole, Role playerMinRole, IHeuristic<Board, Role> h, int depthMax) {
+	public NegaMax(Role playerMaxRole, Role playerMinRole, IHeuristic<Board, Role> h, int depthMax) {
 		this(playerMaxRole, playerMinRole, h);
 		this.depthMax = depthMax;
 	}
@@ -79,7 +79,7 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 
 	@Override
 	public Move bestMove(Board board, Role playerRole) {
-		Result result = this.maxMin(board, playerRole, this.depthMax);
+		Result result = this.negaMax(board, playerRole, this.depthMax, 1);
 
 		if (result.bestMove == null) {
 			return board.possibleMoves(playerRole).get(0);
@@ -92,7 +92,7 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 	 */
 
 	public String toString() {
-		return "MiniMax(ProfMax=" + depthMax + ")";
+		return "NegaMax(ProfMax=" + depthMax + ")";
 	}
 
 	/*
@@ -103,33 +103,11 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 		return playerRole == this.playerMinRole ? this.playerMaxRole : this.playerMinRole;
 	}
 
-	private Result minMax(Board board, Role playerRole, int depth) {
+	private Result negaMax(Board board, Role playerRole, int depth, int p) {
 		this.nbNodes++;
 		if (depth == 0 || board.isGameOver()) {
 			this.nbLeaves++;
-			return new Result(this.h.eval(board, playerRole), null);
-		}
-
-		ArrayList<Move> moves = board.possibleMoves(playerRole);
-		int minValue = IHeuristic.MAX_VALUE;
-		Move bestMove = null;
-		Role opponent = getOpponentRole(playerRole);
-		for (Move currentMove : moves) {
-			Board currentBoard = board.play(currentMove, playerRole);
-			Result result = this.maxMin(currentBoard, opponent, depth - 1);
-			if (result.minOrMax < minValue) {
-				minValue = result.minOrMax;
-				bestMove = currentMove;
-			}
-		}
-		return new Result(minValue, bestMove);
-	}
-
-	private Result maxMin(Board board, Role playerRole, int depth) {
-		this.nbNodes++;
-		if (depth == 0 || board.isGameOver()) {
-			this.nbLeaves++;
-			return new Result(this.h.eval(board, playerRole), null);
+			return new Result(p * this.h.eval(board, playerRole), null);
 		}
 
 		ArrayList<Move> moves = board.possibleMoves(playerRole);
@@ -138,13 +116,12 @@ public class MiniMax<Move extends IMove, Role extends IRole, Board extends IBoar
 		Role opponent = getOpponentRole(playerRole);
 		for (Move currentMove : moves) {
 			Board currentBoard = board.play(currentMove, playerRole);
-			Result result = this.minMax(currentBoard, opponent, depth - 1);
-			if (result.minOrMax > maxValue) {
-				maxValue = result.minOrMax;
+			Result result = this.negaMax(currentBoard, opponent, depth - 1, p * -1);
+			if (-result.maxValue > maxValue) {
+				maxValue = -result.maxValue;
 				bestMove = currentMove;
 			}
 		}
 		return new Result(maxValue, bestMove);
 	}
-
 }

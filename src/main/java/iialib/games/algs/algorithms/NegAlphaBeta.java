@@ -8,15 +8,15 @@ import iialib.games.model.IBoard;
 import iialib.games.model.IMove;
 import iialib.games.model.IRole;
 
-public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBoard<Move, Role, Board>>
+public class NegAlphaBeta<Move extends IMove, Role extends IRole, Board extends IBoard<Move, Role, Board>>
 		implements GameAlgorithm<Move, Role, Board> {
 
 	private class Result {
-		public int alphaOrBeta;
+		public int bestAlpha;
 		public Move bestMove;
 
-		public Result(int alphaOrBeta, Move bestMove) {
-			this.alphaOrBeta = alphaOrBeta;
+		public Result(int bestAlpha, Move bestMove) {
+			this.bestAlpha = bestAlpha;
 			this.bestMove = bestMove;
 		}
 	}
@@ -61,14 +61,14 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 
 	// --------- Constructors ---------
 
-	public AlphaBeta(Role playerMinRole, Role playerMaxRole, IHeuristic<Board, Role> h) {
+	public NegAlphaBeta(Role playerMinRole, Role playerMaxRole, IHeuristic<Board, Role> h) {
 		this.playerMinRole = playerMinRole;
 		this.playerMaxRole = playerMaxRole;
 		this.h = h;
 	}
 
 	//
-	public AlphaBeta(Role playerMinRole, Role playerMaxRole, IHeuristic<Board, Role> h, int depthMax) {
+	public NegAlphaBeta(Role playerMinRole, Role playerMaxRole, IHeuristic<Board, Role> h, int depthMax) {
 		this(playerMinRole, playerMaxRole, h);
 		this.depthMax = depthMax;
 	}
@@ -78,11 +78,12 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 	 */
 	@Override
 	public Move bestMove(Board board, Role playerRole) {
-		System.out.println("[AlphaBeta]");
+		System.out.println("[NegAlphaBeta]");
 
-		Result result = this.alphaBetaMaxMin(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE);
+		Result result = this.negAlphaBeta(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE, 1);
 		if (result.bestMove == null) {
-			return board.possibleMoves(playerRole).get(0);
+			ArrayList<Move> moves = board.possibleMoves(playerRole);
+			return moves.get(0);
 		}
 		return result.bestMove;
 	}
@@ -92,7 +93,7 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 	 */
 
 	public String toString() {
-		return "AlphaBeta(ProfMax=" + depthMax + ")";
+		return "NegAlphaBeta(ProfMax=" + depthMax + ")";
 	}
 
 	/*
@@ -102,11 +103,11 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		return playerRole == this.playerMinRole ? this.playerMaxRole : this.playerMinRole;
 	}
 
-	private Result alphaBetaMinMax(Board board, Role playerRole, int depth, int alpha, int beta) {
+	private Result negAlphaBeta(Board board, Role playerRole, int depth, int alpha, int beta, int p) {
 		++this.nbNodes;
 		if (depth >= this.depthMax || board.isGameOver()) {
 			++this.nbLeaves;
-			return new Result(this.h.eval(board, playerRole), null);
+			return new Result(p * this.h.eval(board, playerRole), null);
 		}
 
 		ArrayList<Move> possibleMoves = board.possibleMoves(playerRole);
@@ -114,33 +115,9 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		Move bestMove = null;
 		for (Move move : possibleMoves) {
 			Board newBoard = board.play(move, playerRole);
-			Result result = this.alphaBetaMaxMin(newBoard, opponent, depth + 1, alpha, beta);
-			if (result.alphaOrBeta < beta) {
-				beta = result.alphaOrBeta;
-				bestMove = move;
-			}
-			if (beta <= alpha) {
-				return new Result(alpha, bestMove);
-			}
-		}
-		return new Result(beta, bestMove);
-	}
-
-	private Result alphaBetaMaxMin(Board board, Role playerRole, int depth, int alpha, int beta) {
-		++this.nbNodes;
-		if (depth >= this.depthMax || board.isGameOver()) {
-			++this.nbLeaves;
-			return new Result(this.h.eval(board, playerRole), null);
-		}
-
-		ArrayList<Move> possibleMoves = board.possibleMoves(playerRole);
-		Role opponent = this.getOpponentRole(playerRole);
-		Move bestMove = null;
-		for (Move move : possibleMoves) {
-			Board newBoard = board.play(move, playerRole);
-			Result result = this.alphaBetaMinMax(newBoard, opponent, depth + 1, alpha, beta);
-			if (result.alphaOrBeta > alpha) {
-				alpha = result.alphaOrBeta;
+			Result result = this.negAlphaBeta(newBoard, opponent, depth + 1, -beta, -alpha, p * -1);
+			if (-result.bestAlpha > alpha) {
+				alpha = -result.bestAlpha;
 				bestMove = move;
 			}
 			if (alpha >= beta) {
