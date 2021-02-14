@@ -18,7 +18,7 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
                 AwaleRole role2 = AwaleRole.PLAYER2;
 
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg1 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
-                                role1, role2, AwaleHeuristics.h1, 7);
+                                role1, role2, AwaleHeuristics.h2, 7);
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg2 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
                                 role2, role1, AwaleHeuristics.h2, 7);
 
