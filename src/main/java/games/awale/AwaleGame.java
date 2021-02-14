@@ -18,9 +18,9 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
                 AwaleRole role2 = AwaleRole.PLAYER2;
 
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg1 = new NegAlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
-                                role1, role2, AwaleHeuristics.h1, 14);
+                                role1, role2, AwaleHeuristics.h4, 4);
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg2 = new NegAlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
-                                role2, role1, AwaleHeuristics.h1, 14);
+                                role2, role1, AwaleHeuristics.h1, 4);
 
                 AIPlayer<AwaleMove, AwaleRole, AwaleBoard> player1 = new AIPlayer<AwaleMove, AwaleRole, AwaleBoard>(
                                 role1, alg1);
