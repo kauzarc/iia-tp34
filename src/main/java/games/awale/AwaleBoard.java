@@ -44,9 +44,11 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         int numBoxInit = move.numeroBox;
         int nbOfSeeds = newBoard[numBoxInit];
         AwaleRole opponent = this.getOpponentRole(playerRole);
-        newBoard[numBoxInit] = 0;
         int numBoxCurrent = numBoxInit;
+        int newNbOfSeedsWinPlayer1 = this.nbOfSeedsWinPlayer1;
+        int newNbOfSeedsWinPlayer2 = this.nbOfSeedsWinPlayer2;
 
+        newBoard[numBoxInit] = 0;
         while (nbOfSeeds > 0) {
             numBoxCurrent = (numBoxCurrent + 1) % 12;
             if (numBoxCurrent != numBoxInit) {
@@ -57,12 +59,16 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
 
         if (!this.wouldBecomeStarving(opponent, numBoxCurrent)) {
             while (isInTheOpponent(playerRole, numBoxCurrent) && (newBoard[numBoxCurrent] == 2 || newBoard[numBoxCurrent] == 3)) {
-                this.nbOfSeedsWinPlayer1 += newBoard[numBoxCurrent];
+                if (playerRole == AwaleRole.PLAYER1) {
+                    newNbOfSeedsWinPlayer1 += newBoard[numBoxCurrent];
+                } else {
+                    newNbOfSeedsWinPlayer2 += newBoard[numBoxCurrent];
+                }
                 newBoard[numBoxCurrent] = 0;
                 numBoxCurrent = (numBoxCurrent - 1) % 12;
             }
         }
-        return new AwaleBoard(newBoard, this.nbOfSeedsWinPlayer1, this.nbOfSeedsWinPlayer2);
+        return new AwaleBoard(newBoard, newNbOfSeedsWinPlayer1, newNbOfSeedsWinPlayer2);
     }
 
     @Override
@@ -104,11 +110,11 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         ArrayList<Score<AwaleRole>> scores = new ArrayList<Score<AwaleRole>>();
 		if  (this.isGameOver()) {
             if  (this.nbOfSeedsWinPlayer1 > this.nbOfSeedsWinPlayer2) {
-				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.LOOSE, this.nbOfSeedsWinPlayer1));
-				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.WIN, this.nbOfSeedsWinPlayer2));
-			} else if  (this.nbOfSeedsWinPlayer2 > this.nbOfSeedsWinPlayer1) {
 				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.WIN, this.nbOfSeedsWinPlayer1));
 				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.LOOSE, this.nbOfSeedsWinPlayer2));
+			} else if  (this.nbOfSeedsWinPlayer2 > this.nbOfSeedsWinPlayer1) {
+				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.LOOSE, this.nbOfSeedsWinPlayer1));
+				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.WIN, this.nbOfSeedsWinPlayer2));
 			} else {
                 scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.WIN, this.nbOfSeedsWinPlayer1));
 				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.WIN, this.nbOfSeedsWinPlayer2));
