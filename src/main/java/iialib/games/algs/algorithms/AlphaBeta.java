@@ -11,11 +11,11 @@ import iialib.games.model.IRole;
 public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBoard<Move, Role, Board>>
 		implements GameAlgorithm<Move, Role, Board> {
 
-	private class ABResult {
+	private class Result {
 		public int alphaOrBeta;
 		public Move bestMove;
 
-		public ABResult(int alphaOrBeta, Move bestMove) {
+		public Result(int alphaOrBeta, Move bestMove) {
 			this.alphaOrBeta = alphaOrBeta;
 			this.bestMove = bestMove;
 		}
@@ -80,7 +80,7 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 	public Move bestMove(Board board, Role playerRole) {
 		System.out.println("[AlphaBeta]");
 
-		ABResult result = this.alphaBetaMaxMin(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE);
+		Result result = this.alphaBetaMaxMin(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE);
 		if (result.bestMove == null) {
 			return board.possibleMoves(playerRole).get(0);
 		}
@@ -102,11 +102,11 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		return playerRole == this.playerMinRole ? this.playerMaxRole : this.playerMinRole;
 	}
 
-	private ABResult alphaBetaMinMax(Board board, Role playerRole, int depth, int alpha, int beta) {
+	private Result alphaBetaMinMax(Board board, Role playerRole, int depth, int alpha, int beta) {
 		++this.nbNodes;
 		if (depth >= this.depthMax || board.isGameOver()) {
 			++this.nbLeaves;
-			return new ABResult(this.h.eval(board, playerRole), null);
+			return new Result(this.h.eval(board, playerRole), null);
 		}
 
 		ArrayList<Move> possibleMoves = board.possibleMoves(playerRole);
@@ -114,23 +114,23 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		Move bestMove = null;
 		for (Move move : possibleMoves) {
 			Board newBoard = board.play(move, playerRole);
-			ABResult result = this.alphaBetaMaxMin(newBoard, opponent, depth + 1, alpha, beta);
+			Result result = this.alphaBetaMaxMin(newBoard, opponent, depth + 1, alpha, beta);
 			if (result.alphaOrBeta < beta) {
 				beta = result.alphaOrBeta;
 				bestMove = move;
 			}
 			if (beta <= alpha) {
-				return new ABResult(beta, bestMove);
+				return new Result(alpha, bestMove);
 			}
 		}
-		return new ABResult(beta, bestMove);
+		return new Result(beta, bestMove);
 	}
 
-	private ABResult alphaBetaMaxMin(Board board, Role playerRole, int depth, int alpha, int beta) {
+	private Result alphaBetaMaxMin(Board board, Role playerRole, int depth, int alpha, int beta) {
 		++this.nbNodes;
 		if (depth >= this.depthMax || board.isGameOver()) {
 			++this.nbLeaves;
-			return new ABResult(this.h.eval(board, playerRole), null);
+			return new Result(this.h.eval(board, playerRole), null);
 		}
 
 		ArrayList<Move> possibleMoves = board.possibleMoves(playerRole);
@@ -138,15 +138,15 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		Move bestMove = null;
 		for (Move move : possibleMoves) {
 			Board newBoard = board.play(move, playerRole);
-			ABResult result = this.alphaBetaMinMax(newBoard, opponent, depth + 1, alpha, beta);
+			Result result = this.alphaBetaMinMax(newBoard, opponent, depth + 1, alpha, beta);
 			if (result.alphaOrBeta > alpha) {
 				alpha = result.alphaOrBeta;
 				bestMove = move;
 			}
 			if (alpha >= beta) {
-				return new ABResult(alpha, bestMove);
+				return new Result(beta, bestMove);
 			}
 		}
-		return new ABResult(alpha, bestMove);
+		return new Result(alpha, bestMove);
 	}
 }

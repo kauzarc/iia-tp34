@@ -11,13 +11,13 @@ import iialib.games.model.IRole;
 public class NegAlphaBeta<Move extends IMove, Role extends IRole, Board extends IBoard<Move, Role, Board>>
 		implements GameAlgorithm<Move, Role, Board> {
 
-	private class ABResult {
-		public int best_alpha;
-		public Move best_move;
+	private class Result {
+		public int bestAlpha;
+		public Move bestMove;
 
-		public ABResult(int best_alpha, Move best_move) {
-			this.best_alpha = best_alpha;
-			this.best_move = best_move;
+		public Result(int bestAlpha, Move bestMove) {
+			this.bestAlpha = bestAlpha;
+			this.bestMove = bestMove;
 		}
 	}
 
@@ -80,12 +80,12 @@ public class NegAlphaBeta<Move extends IMove, Role extends IRole, Board extends 
 	public Move bestMove(Board board, Role playerRole) {
 		System.out.println("[NegAlphaBeta]");
 
-		ABResult result = this.negAlphaBeta(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE, 1);
-		if (result.best_move == null) {
+		Result result = this.negAlphaBeta(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE, 1);
+		if (result.bestMove == null) {
 			ArrayList<Move> moves = board.possibleMoves(playerRole);
 			return moves.get(0);
 		}
-		return result.best_move;
+		return result.bestMove;
 	}
 
 	/*
@@ -103,30 +103,27 @@ public class NegAlphaBeta<Move extends IMove, Role extends IRole, Board extends 
 		return playerRole == this.playerMinRole ? this.playerMaxRole : this.playerMinRole;
 	}
 
-	private ABResult negAlphaBeta(Board board, Role playerRole, int depth, int alpha, int beta, int p) {
+	private Result negAlphaBeta(Board board, Role playerRole, int depth, int alpha, int beta, int p) {
 		++this.nbNodes;
 		if (depth >= this.depthMax || board.isGameOver()) {
 			++this.nbLeaves;
-			return new ABResult(p * this.h.eval(board, playerRole), null);
+			return new Result(p * this.h.eval(board, playerRole), null);
 		}
 
 		ArrayList<Move> possibleMoves = board.possibleMoves(playerRole);
 		Role opponent = this.getOpponentRole(playerRole);
-		Move best_move = null;
+		Move bestMove = null;
 		for (Move move : possibleMoves) {
 			Board newBoard = board.play(move, playerRole);
-			ABResult result = this.negAlphaBeta(newBoard, opponent, depth + 1, -beta, -alpha, p * -1);
-			// System.out.println(depth + " > move: " + move + ", player: " + playerRole +
-			// ", result: " + (-result.best_alpha)
-			// + ", for move: " + result.best_move);
-			if (-result.best_alpha > alpha) {
-				alpha = -result.best_alpha;
-				best_move = move;
+			Result result = this.negAlphaBeta(newBoard, opponent, depth + 1, -beta, -alpha, p * -1);
+			if (-result.bestAlpha > alpha) {
+				alpha = -result.bestAlpha;
+				bestMove = move;
 			}
 			if (alpha >= beta) {
-				return new ABResult(beta, best_move);
+				return new Result(beta, bestMove);
 			}
 		}
-		return new ABResult(alpha, best_move);
+		return new Result(alpha, bestMove);
 	}
 }

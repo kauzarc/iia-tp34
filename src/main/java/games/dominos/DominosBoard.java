@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class DominosBoard implements IBoard<DominosMove, DominosRole, DominosBoard> {
 
-	private static int DEFAULT_GRID_SIZE = 5;
+	private static int DEFAULT_GRID_SIZE = 7;
 
 	// --------- Class Attribute ---------
 

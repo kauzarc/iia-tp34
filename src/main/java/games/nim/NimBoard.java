@@ -1,8 +1,6 @@
 package games.nim;
 
 import iialib.games.model.IBoard;
-import iialib.games.model.IMove;
-import iialib.games.model.IRole;
 import iialib.games.model.Score;
 
 import java.util.ArrayList;
@@ -64,6 +62,6 @@ public class NimBoard implements IBoard<NimMove, NimRole, NimBoard> {
 
     @Override
     public String toString() {
-        return "" + this.board;
+        return String.valueOf(this.board);
     }
 }
