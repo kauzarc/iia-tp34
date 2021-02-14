@@ -7,7 +7,9 @@ def sh(script):
 
 games = {
     "awale": "games.awale.AwaleGame",
-    "dominos": "games.dominos.DominosGame"
+    "dominos": "games.dominos.DominosGame",
+    "nim": "games.nim.NimGame",
+    "otherGame": "games.otherGame.otherGame"
 }
 
 print("Chose a game :")
