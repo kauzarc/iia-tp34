@@ -88,8 +88,8 @@ public class OtherGameBoard implements IBoard<OtherGameMove, OtherGameRole, Othe
 	public ArrayList<Score<OtherGameRole>> getScores() {
 		ArrayList<Score<OtherGameRole>> scores = new ArrayList<Score<OtherGameRole>>();
 
-		scores.add(
-				new Score<OtherGameRole>(OtherGameRole.PLAYER_ONE, Score.Status.WIN, Integer.parseInt(this.head.toString())));
+		scores.add(new Score<OtherGameRole>(OtherGameRole.PLAYER_ONE, Score.Status.WIN,
+				Integer.parseInt(this.head.toString())));
 		return scores;
 	}
 

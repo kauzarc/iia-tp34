@@ -6,10 +6,6 @@ import iialib.games.algs.AIPlayer;
 import iialib.games.algs.AbstractGame;
 import iialib.games.algs.GameAlgorithm;
 import iialib.games.algs.algorithms.NegAlphaBeta;
-import iialib.games.algs.algorithms.AlphaBeta;
-import iialib.games.algs.algorithms.MiniMax;
-import iialib.games.algs.algorithms.NegaMax;
-import iialib.games.algs.algorithms.Human;
 
 public class DominosGame extends AbstractGame<DominosMove, DominosRole, DominosBoard> {
 

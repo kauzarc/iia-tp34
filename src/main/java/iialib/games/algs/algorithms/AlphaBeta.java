@@ -86,7 +86,6 @@ public class AlphaBeta<Move extends IMove, Role extends IRole, Board extends IBo
 		}
 		System.out.println("fin");
 
-
 		Result result = this.alphaBetaMaxMin(board, playerRole, 0, IHeuristic.MIN_VALUE, IHeuristic.MAX_VALUE);
 		if (result.bestMove == null) {
 			return board.possibleMoves(playerRole).get(0);

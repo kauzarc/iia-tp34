@@ -43,7 +43,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         int[] newBoard = this.copyBoard();
         int numBoxInit = move.numeroBox;
         int nbOfSeeds = newBoard[numBoxInit];
-        AwaleRole opponent = this.getOpponentRole(playerRole);
+        AwaleRole opponent = playerRole.getOpponentRole();
         int numBoxCurrent = numBoxInit;
         int newNbOfSeedsWinPlayer1 = this.nbOfSeedsWinPlayer1;
         int newNbOfSeedsWinPlayer2 = this.nbOfSeedsWinPlayer2;
@@ -76,7 +76,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     public ArrayList<AwaleMove> possibleMoves(AwaleRole playerRole) {
         ArrayList<AwaleMove> movesList = new ArrayList<>();
         int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : 6;
-        boolean opponentIsStarving = this.isStarving(this.getOpponentRole(playerRole));
+        boolean opponentIsStarving = this.isStarving(playerRole.getOpponentRole());
 
         for (int i = playerSide; i < (playerSide + 6); ++i) {
             if (this.board[i] != 0) {
@@ -177,10 +177,6 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         int[] newBoard = new int[12];
         System.arraycopy(this.board, 0, newBoard, 0, 12);
         return newBoard;
-    }
-
-    private AwaleRole getOpponentRole(AwaleRole playerRole) {
-        return playerRole == AwaleRole.PLAYER1 ? AwaleRole.PLAYER2 : AwaleRole.PLAYER1;
     }
 
     private boolean isStarving(AwaleRole playerRole) {

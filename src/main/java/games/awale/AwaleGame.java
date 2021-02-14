@@ -6,8 +6,6 @@ import iialib.games.algs.AIPlayer;
 import iialib.games.algs.AbstractGame;
 import iialib.games.algs.GameAlgorithm;
 import iialib.games.algs.algorithms.AlphaBeta;
-import iialib.games.algs.algorithms.MiniMax;
-import iialib.games.algs.algorithms.Human;
 
 public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
 
@@ -23,8 +21,6 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
                 role2, AwaleHeuristics.h1, 10);
         GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg2 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(role2,
                 role1, AwaleHeuristics.h1, 10);
-
-        // GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg2 = new Human<>();
 
         AIPlayer<AwaleMove, AwaleRole, AwaleBoard> player1 = new AIPlayer<AwaleMove, AwaleRole, AwaleBoard>(role1,
                 alg1);
