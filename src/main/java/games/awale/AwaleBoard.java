@@ -8,7 +8,7 @@ import iialib.games.model.Score;
 public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
 
     /*---------------------------------------------------------------------*/
-    /*                              CONSTANTS                              */
+    /* CONSTANTS */
     /*---------------------------------------------------------------------*/
 
     private final int[] board;
@@ -16,12 +16,12 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     private int nbOfSeedsWinPlayer2;
 
     /*---------------------------------------------------------------------*/
-    /*                            CONSTRUCTORS                             */
+    /* CONSTRUCTORS */
     /*---------------------------------------------------------------------*/
 
     public AwaleBoard() {
         this.board = new int[12];
-        for  (int i = 0; i < 12; ++i) {
+        for (int i = 0; i < 12; ++i) {
             this.board[i] = 4;
         }
         this.nbOfSeedsWinPlayer1 = 0;
@@ -35,7 +35,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     }
 
     /*---------------------------------------------------------------------*/
-    /*                            PUBLICS METHODS                          */
+    /* PUBLICS METHODS */
     /*---------------------------------------------------------------------*/
 
     @Override
@@ -58,7 +58,8 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         }
 
         if (!this.wouldBecomeStarving(opponent, numBoxCurrent)) {
-            while (isInTheOpponent(playerRole, numBoxCurrent) && (newBoard[numBoxCurrent] == 2 || newBoard[numBoxCurrent] == 3)) {
+            while (isInTheOpponent(playerRole, numBoxCurrent)
+                    && (newBoard[numBoxCurrent] == 2 || newBoard[numBoxCurrent] == 3)) {
                 if (playerRole == AwaleRole.PLAYER1) {
                     newNbOfSeedsWinPlayer1 += newBoard[numBoxCurrent];
                 } else {
@@ -100,24 +101,23 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
 
     @Override
     public boolean isGameOver() {
-        return this.nbOfSeedsWinPlayer1 >= 25
-            || this.nbOfSeedsWinPlayer2 >= 25
-            || 48 - this.nbOfSeedsWinPlayer1 - this.nbOfSeedsWinPlayer2 <= 6;
+        return this.nbOfSeedsWinPlayer1 >= 25 || this.nbOfSeedsWinPlayer2 >= 25
+                || 48 - this.nbOfSeedsWinPlayer1 - this.nbOfSeedsWinPlayer2 <= 6;
     }
 
     @Override
     public ArrayList<Score<AwaleRole>> getScores() {
         ArrayList<Score<AwaleRole>> scores = new ArrayList<Score<AwaleRole>>();
-		if  (this.isGameOver()) {
-            if  (this.nbOfSeedsWinPlayer1 > this.nbOfSeedsWinPlayer2) {
-				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.WIN, this.nbOfSeedsWinPlayer1));
-				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.LOOSE, this.nbOfSeedsWinPlayer2));
-			} else if  (this.nbOfSeedsWinPlayer2 > this.nbOfSeedsWinPlayer1) {
-				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.LOOSE, this.nbOfSeedsWinPlayer1));
-				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.WIN, this.nbOfSeedsWinPlayer2));
-			} else {
+        if (this.isGameOver()) {
+            if (this.nbOfSeedsWinPlayer1 > this.nbOfSeedsWinPlayer2) {
                 scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.WIN, this.nbOfSeedsWinPlayer1));
-				scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.WIN, this.nbOfSeedsWinPlayer2));
+                scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.LOOSE, this.nbOfSeedsWinPlayer2));
+            } else if (this.nbOfSeedsWinPlayer2 > this.nbOfSeedsWinPlayer1) {
+                scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.LOOSE, this.nbOfSeedsWinPlayer1));
+                scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.WIN, this.nbOfSeedsWinPlayer2));
+            } else {
+                scores.add(new Score<AwaleRole>(AwaleRole.PLAYER1, Score.Status.WIN, this.nbOfSeedsWinPlayer1));
+                scores.add(new Score<AwaleRole>(AwaleRole.PLAYER2, Score.Status.WIN, this.nbOfSeedsWinPlayer2));
             }
         }
         return scores;
@@ -125,32 +125,63 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
 
     @Override
     public String toString() {
-		StringBuilder boardToString = new StringBuilder(new String(""));
+        StringBuilder boardToString = new StringBuilder(new String(""));
 
-		for  (int i = 11; i > 5; --i) {
+        for (int i = 11; i > 5; --i) {
             boardToString.append(this.board[i] + " ");
         }
         boardToString.append("\n");
-		for  (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 6; ++i) {
             boardToString.append(this.board[i] + " ");
         }
         boardToString.append("\n");
-		return boardToString.toString();
-	}
+        return boardToString.toString();
+    }
+
+    public int getNumberSeedsCaptured(AwaleRole role) {
+        switch (role) {
+            case PLAYER1:
+                return this.nbOfSeedsWinPlayer1;
+            case PLAYER2:
+                return this.nbOfSeedsWinPlayer2;
+            default:
+                return -1;
+        }
+    }
+
+    public int getNumberSeedsCapturable(AwaleRole role) {
+        int sum = 0;
+        int otherPlayerSide = role == AwaleRole.PLAYER1 ? 6 : 0;
+        for (int i = 0; i < 6; ++i) {
+            int nbSeed = this.board[otherPlayerSide + i];
+            if (nbSeed == 1 || nbSeed == 2) {
+                sum += nbSeed;
+            }
+        }
+        return sum;
+    }
+
+    public int getNumberSeedsLeftOnBoard() {
+        int sum = 0;
+        for (int seed : this.board) {
+            sum += seed;
+        }
+        return sum;
+    }
 
     /*---------------------------------------------------------------------*/
-    /*                          PRIVATE METHODS                            */
+    /* PRIVATE METHODS */
     /*---------------------------------------------------------------------*/
 
     private int[] copyBoard() {
         int[] newBoard = new int[12];
-		System.arraycopy(this.board, 0, newBoard, 0, 12);
+        System.arraycopy(this.board, 0, newBoard, 0, 12);
         return newBoard;
     }
 
     private AwaleRole getOpponentRole(AwaleRole playerRole) {
-		return playerRole == AwaleRole.PLAYER1 ? AwaleRole.PLAYER2 : AwaleRole.PLAYER1;
-	}
+        return playerRole == AwaleRole.PLAYER1 ? AwaleRole.PLAYER2 : AwaleRole.PLAYER1;
+    }
 
     private boolean isStarving(AwaleRole playerRole) {
         int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : 6;
