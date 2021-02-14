@@ -19,14 +19,6 @@ public class OtherGame extends AbstractGame<OtherGameMove, OtherGameRole, OtherG
 		OtherGameRole roleP1 = OtherGameRole.PLAYER_ONE;
 		OtherGameRole roleP2 = OtherGameRole.PLAYER_TWO;
 
-		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algV = new
-		MiniMax<OtherGameMove, OtherGameRole, OtherGameBoard>(
-		roleP1, roleP2, OtherGameHeuristics.h, 3); // Minimax depth 4
-
-		GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algH = new
-		MiniMax<OtherGameMove, OtherGameRole, OtherGameBoard>(
-		roleP1, roleP2, OtherGameHeuristics.h, 3); // Minimax depth 2
-
 		// GameAlgorithm<OtherGameMove, OtherGameRole, OtherGameBoard> algV = new AlphaBeta<OtherGameMove, OtherGameRole, OtherGameBoard>(
 		// 		roleP2, roleP1, OtherGameHeuristics.h, 4); // AlphaBeta depth 4
 
