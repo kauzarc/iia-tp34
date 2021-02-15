@@ -90,7 +90,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         for (int i = 0; i < SIDE_SIZE; ++i) {
             int nbSeed = this.board[playerSide + i];
             if (nbSeed != 0 && !this.wouldBecomeStarvingAfterPlaying(playerRole, playerSide + i)) {
-                movesList.add(new AwaleMove(i));
+                movesList.add(new AwaleMove(playerSide + i));
             }
         }
         if (movesList.isEmpty()) {
