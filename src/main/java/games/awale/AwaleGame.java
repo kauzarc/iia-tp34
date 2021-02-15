@@ -6,8 +6,6 @@ import iialib.games.algs.AIPlayer;
 import iialib.games.algs.AbstractGame;
 import iialib.games.algs.GameAlgorithm;
 import iialib.games.algs.algorithms.AlphaBeta;
-import iialib.games.algs.algorithms.MiniMax;
-import iialib.games.algs.algorithms.Human;
 
 public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
 
@@ -20,7 +18,7 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
                 AwaleRole role2 = AwaleRole.PLAYER2;
 
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg1 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
-                                role1, role2, AwaleHeuristics.h1, 7);
+                                role1, role2, AwaleHeuristics.h2, 7);
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg2 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
                                 role2, role1, AwaleHeuristics.h2, 7);
 
@@ -31,8 +29,8 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
 
                 ArrayList<AIPlayer<AwaleMove, AwaleRole, AwaleBoard>> players = new ArrayList<AIPlayer<AwaleMove, AwaleRole, AwaleBoard>>();
 
-                players.add(player2);
                 players.add(player1);
+                players.add(player2);
 
                 AwaleBoard initialBoard = new AwaleBoard();
 

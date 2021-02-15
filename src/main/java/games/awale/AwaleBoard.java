@@ -51,12 +51,12 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     @Override
     public AwaleBoard play(AwaleMove move, AwaleRole playerRole) {
         int[] newBoard = this.copyBoard();
-        int numBoxInit = move.numeroBox;
+        int numBoxInit = move.boxId;
         int nbOfSeeds = newBoard[numBoxInit];
         int numBoxCurrent = numBoxInit;
         int newNbOfSeedsWinPlayer1 = this.nbOfSeedsWinPlayer1;
         int newNbOfSeedsWinPlayer2 = this.nbOfSeedsWinPlayer2;
-        AwaleRole opponent = this.getOpponentRole(playerRole);
+        AwaleRole opponent = playerRole.getOpponentRole();
 
         newBoard[numBoxInit] = 0;
         while (nbOfSeeds > 0) {
@@ -90,7 +90,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         for (int i = 0; i < SIDE_SIZE; ++i) {
             int nbSeed = this.board[playerSide + i];
             if (nbSeed != 0 && !this.wouldBecomeStarvingAfterPlaying(playerRole, playerSide + i)) {
-                movesList.add(new AwaleMove(i));
+                movesList.add(new AwaleMove(playerSide + i));
             }
         }
         if (movesList.isEmpty()) {
@@ -102,9 +102,9 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     @Override
     public boolean isValidMove(AwaleMove move, AwaleRole playerRole) {
         if (playerRole == AwaleRole.PLAYER1) {
-            return this.board[move.numeroBox] != 0 && move.numeroBox >= 0 && move.numeroBox < SIDE_SIZE;
+            return this.board[move.boxId] != 0 && move.boxId >= 0 && move.boxId < SIDE_SIZE;
         }
-        return this.board[move.numeroBox] != 0 && move.numeroBox >= SIDE_SIZE && move.numeroBox < BOARD_SIZE;
+        return this.board[move.boxId] != 0 && move.boxId >= SIDE_SIZE && move.boxId < BOARD_SIZE;
     }
 
     @Override
@@ -184,10 +184,6 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         int[] newBoard = new int[BOARD_SIZE];
         System.arraycopy(this.board, 0, newBoard, 0, BOARD_SIZE);
         return newBoard;
-    }
-
-    private AwaleRole getOpponentRole(AwaleRole playerRole) {
-        return playerRole == AwaleRole.PLAYER1 ? AwaleRole.PLAYER2 : AwaleRole.PLAYER1;
     }
 
     private boolean isStarving(AwaleRole playerRole) {

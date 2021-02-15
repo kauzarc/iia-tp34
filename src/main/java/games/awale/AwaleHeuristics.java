@@ -19,4 +19,19 @@ public class AwaleHeuristics {
                 + (AwaleBoard.TOTAL_SEED - seedLeft) * board.getNumberSeedsCaptured(role.getOpponentRole());
         return score1 - score2;
     };
+
+    public static IHeuristic<AwaleBoard, AwaleRole> h3 = (board, role) -> {
+        int score1 = board.getNumberSeedsCapturable(role) + 2 * board.getNumberSeedsCaptured(role);
+        int score2 = board.getNumberSeedsCapturable(role.getOpponentRole())
+                + 2 * board.getNumberSeedsCaptured(role.getOpponentRole());
+        return score1 - score2;
+    };
+
+    public static IHeuristic<AwaleBoard, AwaleRole> h4 = (board, role) -> {
+        return board.getNumberSeedsCaptured(role) - board.getNumberSeedsCaptured(role.getOpponentRole());
+    };
+
+    public static IHeuristic<AwaleBoard, AwaleRole> h5 = (board, role) -> {
+        return board.getNumberSeedsCaptured(role);
+    };
 }
