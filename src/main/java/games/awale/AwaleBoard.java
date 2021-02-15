@@ -51,7 +51,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     @Override
     public AwaleBoard play(AwaleMove move, AwaleRole playerRole) {
         int[] newBoard = this.copyBoard();
-        int numBoxInit = move.numeroBox;
+        int numBoxInit = move.boxId;
         int nbOfSeeds = newBoard[numBoxInit];
         int numBoxCurrent = numBoxInit;
         int newNbOfSeedsWinPlayer1 = this.nbOfSeedsWinPlayer1;
@@ -102,9 +102,9 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     @Override
     public boolean isValidMove(AwaleMove move, AwaleRole playerRole) {
         if (playerRole == AwaleRole.PLAYER1) {
-            return this.board[move.numeroBox] != 0 && move.numeroBox >= 0 && move.numeroBox < SIDE_SIZE;
+            return this.board[move.boxId] != 0 && move.boxId >= 0 && move.boxId < SIDE_SIZE;
         }
-        return this.board[move.numeroBox] != 0 && move.numeroBox >= SIDE_SIZE && move.numeroBox < BOARD_SIZE;
+        return this.board[move.boxId] != 0 && move.boxId >= SIDE_SIZE && move.boxId < BOARD_SIZE;
     }
 
     @Override
