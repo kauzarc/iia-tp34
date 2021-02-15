@@ -15,6 +15,9 @@ Liste des différents jeux implémentés :
 Information sur le jeu de l'Awale :
     Nous avons implémentés 5 heuristiques différentes pour tester les performances.
     Nous pensons que l'heuristiques "h4" est la plus adapté pour le cas de ce jeu.
+    Parce que même si il ne permet pas de représenter la force des positions aussi
+    bien que d'autres heuristique comme "h1" ou "h2", sa simplicitée permet de compenser
+    en poussant les calculs un peu plus profondément
 
 
 Pour finir, un script en python est disponible pour choisir le jeu voulu.
