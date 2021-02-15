@@ -18,9 +18,9 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
                 AwaleRole role2 = AwaleRole.PLAYER2;
 
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg1 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
-                                role1, role2, AwaleHeuristics.h2, 7);
+                                role1, role2, AwaleHeuristics.h2, 6);
                 GameAlgorithm<AwaleMove, AwaleRole, AwaleBoard> alg2 = new AlphaBeta<AwaleMove, AwaleRole, AwaleBoard>(
-                                role2, role1, AwaleHeuristics.h2, 7);
+                                role2, role1, AwaleHeuristics.h3, 6);
 
                 AIPlayer<AwaleMove, AwaleRole, AwaleBoard> player1 = new AIPlayer<AwaleMove, AwaleRole, AwaleBoard>(
                                 role1, alg1);
@@ -29,8 +29,8 @@ public class AwaleGame extends AbstractGame<AwaleMove, AwaleRole, AwaleBoard> {
 
                 ArrayList<AIPlayer<AwaleMove, AwaleRole, AwaleBoard>> players = new ArrayList<AIPlayer<AwaleMove, AwaleRole, AwaleBoard>>();
 
-                players.add(player1);
                 players.add(player2);
+                players.add(player1);
 
                 AwaleBoard initialBoard = new AwaleBoard();
 
