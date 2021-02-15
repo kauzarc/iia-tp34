@@ -7,11 +7,21 @@ import iialib.games.model.Score;
 
 public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
 
+    public final static int SIDE_SIZE = 6;
+    public final static int NB_SEED_BY_HOLE = 4;
+    public final static int BOARD_SIZE = SIDE_SIZE * 2;
+    public final static int TOTAL_SEED = BOARD_SIZE * NB_SEED_BY_HOLE;
+
     /*---------------------------------------------------------------------*/
     /* CONSTANTS */
     /*---------------------------------------------------------------------*/
 
     private final int[] board;
+
+    /*---------------------------------------------------------------------*/
+    /* ATTRIBUTES */
+    /*---------------------------------------------------------------------*/
+
     private int nbOfSeedsWinPlayer1;
     private int nbOfSeedsWinPlayer2;
 
@@ -20,9 +30,9 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     /*---------------------------------------------------------------------*/
 
     public AwaleBoard() {
-        this.board = new int[12];
-        for (int i = 0; i < 12; ++i) {
-            this.board[i] = 4;
+        this.board = new int[BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; ++i) {
+            this.board[i] = NB_SEED_BY_HOLE;
         }
         this.nbOfSeedsWinPlayer1 = 0;
         this.nbOfSeedsWinPlayer2 = 0;
@@ -41,16 +51,16 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     @Override
     public AwaleBoard play(AwaleMove move, AwaleRole playerRole) {
         int[] newBoard = this.copyBoard();
-        int numBoxInit = move.numeroBox;
+        int numBoxInit = move.boxId;
         int nbOfSeeds = newBoard[numBoxInit];
-        AwaleRole opponent = playerRole.getOpponentRole();
         int numBoxCurrent = numBoxInit;
         int newNbOfSeedsWinPlayer1 = this.nbOfSeedsWinPlayer1;
         int newNbOfSeedsWinPlayer2 = this.nbOfSeedsWinPlayer2;
+        AwaleRole opponent = playerRole.getOpponentRole();
 
         newBoard[numBoxInit] = 0;
         while (nbOfSeeds > 0) {
-            numBoxCurrent = (numBoxCurrent + 1) % 12;
+            numBoxCurrent = (numBoxCurrent + 1) % BOARD_SIZE;
             if (numBoxCurrent != numBoxInit) {
                 ++newBoard[numBoxCurrent];
                 --nbOfSeeds;
@@ -58,7 +68,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
         }
 
         if (!this.wouldBecomeStarving(opponent, numBoxCurrent)) {
-            while (isInTheOpponent(playerRole, numBoxCurrent)
+            while (this.isInTheOpponent(playerRole, numBoxCurrent)
                     && (newBoard[numBoxCurrent] == 2 || newBoard[numBoxCurrent] == 3)) {
                 if (playerRole == AwaleRole.PLAYER1) {
                     newNbOfSeedsWinPlayer1 += newBoard[numBoxCurrent];
@@ -66,7 +76,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
                     newNbOfSeedsWinPlayer2 += newBoard[numBoxCurrent];
                 }
                 newBoard[numBoxCurrent] = 0;
-                numBoxCurrent = (numBoxCurrent - 1) % 12;
+                numBoxCurrent = (numBoxCurrent - 1) % BOARD_SIZE;
             }
         }
         return new AwaleBoard(newBoard, newNbOfSeedsWinPlayer1, newNbOfSeedsWinPlayer2);
@@ -75,14 +85,12 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     @Override
     public ArrayList<AwaleMove> possibleMoves(AwaleRole playerRole) {
         ArrayList<AwaleMove> movesList = new ArrayList<>();
-        int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : 6;
-        boolean opponentIsStarving = this.isStarving(playerRole.getOpponentRole());
+        int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : SIDE_SIZE;
 
-        for (int i = playerSide; i < (playerSide + 6); ++i) {
-            if (this.board[i] != 0) {
-                if (!opponentIsStarving || this.wouldFeedTheOpponent(playerRole, i)) {
-                    movesList.add(new AwaleMove(i));
-                }
+        for (int i = 0; i < SIDE_SIZE; ++i) {
+            int nbSeed = this.board[playerSide + i];
+            if (nbSeed != 0 && !this.wouldBecomeStarvingAfterPlaying(playerRole, playerSide + i)) {
+                movesList.add(new AwaleMove(playerSide + i));
             }
         }
         if (movesList.isEmpty()) {
@@ -94,15 +102,16 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     @Override
     public boolean isValidMove(AwaleMove move, AwaleRole playerRole) {
         if (playerRole == AwaleRole.PLAYER1) {
-            return this.board[move.numeroBox] != 0 && move.numeroBox < 6;
+            return this.board[move.boxId] != 0 && move.boxId >= 0 && move.boxId < SIDE_SIZE;
         }
-        return this.board[move.numeroBox] != 0 && move.numeroBox > 5;
+        return this.board[move.boxId] != 0 && move.boxId >= SIDE_SIZE && move.boxId < BOARD_SIZE;
     }
 
     @Override
     public boolean isGameOver() {
         return this.nbOfSeedsWinPlayer1 >= 25 || this.nbOfSeedsWinPlayer2 >= 25
-                || 48 - this.nbOfSeedsWinPlayer1 - this.nbOfSeedsWinPlayer2 <= 6;
+                || 48 - this.nbOfSeedsWinPlayer1 - this.nbOfSeedsWinPlayer2 <= 6
+                || (this.possibleMoves(AwaleRole.PLAYER1).isEmpty() && this.possibleMoves(AwaleRole.PLAYER2).isEmpty());
     }
 
     @Override
@@ -127,32 +136,29 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     public String toString() {
         StringBuilder boardToString = new StringBuilder(new String(""));
 
-        for (int i = 11; i > 5; --i) {
+        for (int i = BOARD_SIZE - 1; i >= SIDE_SIZE; --i) {
             boardToString.append(this.board[i] + " ");
         }
         boardToString.append("\n");
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < SIDE_SIZE; ++i) {
             boardToString.append(this.board[i] + " ");
         }
         boardToString.append("\n");
         return boardToString.toString();
     }
 
-    public int getNumberSeedsCaptured(AwaleRole role) {
-        switch (role) {
-            case PLAYER1:
-                return this.nbOfSeedsWinPlayer1;
-            case PLAYER2:
-                return this.nbOfSeedsWinPlayer2;
-            default:
-                return -1;
+    public int getNumberSeedsCaptured(AwaleRole playerRole) {
+        if (playerRole == AwaleRole.PLAYER1) {
+            return this.nbOfSeedsWinPlayer1;
         }
+        return this.nbOfSeedsWinPlayer2;
     }
 
-    public int getNumberSeedsCapturable(AwaleRole role) {
+    public int getNumberSeedsCapturable(AwaleRole playerRole) {
         int sum = 0;
-        int otherPlayerSide = role == AwaleRole.PLAYER1 ? 6 : 0;
-        for (int i = 0; i < 6; ++i) {
+        int otherPlayerSide = playerRole == AwaleRole.PLAYER1 ? SIDE_SIZE : 0;
+
+        for (int i = 0; i < SIDE_SIZE; ++i) {
             int nbSeed = this.board[otherPlayerSide + i];
             if (nbSeed == 1 || nbSeed == 2) {
                 sum += nbSeed;
@@ -163,6 +169,7 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
 
     public int getNumberSeedsLeftOnBoard() {
         int sum = 0;
+
         for (int seed : this.board) {
             sum += seed;
         }
@@ -174,16 +181,17 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     /*---------------------------------------------------------------------*/
 
     private int[] copyBoard() {
-        int[] newBoard = new int[12];
-        System.arraycopy(this.board, 0, newBoard, 0, 12);
+        int[] newBoard = new int[BOARD_SIZE];
+        System.arraycopy(this.board, 0, newBoard, 0, BOARD_SIZE);
         return newBoard;
     }
 
     private boolean isStarving(AwaleRole playerRole) {
-        int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : 6;
+        int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : SIDE_SIZE;
 
-        for (int i = playerSide; i < (playerSide + 6); ++i) {
-            if (this.board[i] != 0) {
+        for (int i = 0; i < SIDE_SIZE; ++i) {
+            int nbSeed = this.board[playerSide + i];
+            if (nbSeed != 0) {
                 return false;
             }
         }
@@ -191,32 +199,32 @@ public class AwaleBoard implements IBoard<AwaleMove, AwaleRole, AwaleBoard> {
     }
 
     private boolean wouldBecomeStarving(AwaleRole playerRole, int numOfBox) {
-        int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : 6;
+        int playerSide = playerRole == AwaleRole.PLAYER1 ? 0 : SIDE_SIZE;
 
-        for (int i = playerSide; i < (playerSide + 6); ++i) {
-            if ((i <= numOfBox && this.board[i] != 2 && this.board[i] != 3) || (i > numOfBox && this.board[i] != 0)) {
+        for (int i = 0; i < SIDE_SIZE; ++i) {
+            int nbSeed = this.board[playerSide + i];
+            if ((i <= numOfBox && nbSeed != 2 && nbSeed != 3) || (playerSide + i > numOfBox && nbSeed != 0)) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean wouldFeedTheOpponent(AwaleRole playerRole, int numOfBox) {
-        int nbSeeds = this.board[numOfBox];
-        int boxOfTheLastSeed = (numOfBox + nbSeeds) % 12;
+    private boolean wouldBecomeStarvingAfterPlaying(AwaleRole playerRole, int numOfBox) {
+        AwaleBoard tmpBoard = this.play(new AwaleMove(numOfBox), playerRole);
 
-        return nbSeeds > 6 || this.isInTheOpponent(playerRole, boxOfTheLastSeed);
+        return tmpBoard.isStarving(playerRole.getOpponentRole());
     }
 
     private boolean isInTheOpponent(AwaleRole playerRole, int numOfBox) {
         if (playerRole == AwaleRole.PLAYER1) {
-            return numOfBox > 5;
+            return numOfBox >= SIDE_SIZE;
         }
-        return numOfBox < 6 && numOfBox >= 0;
+        return numOfBox < SIDE_SIZE && numOfBox >= 0;
     }
 
     private void recoverAllTheSeeds(AwaleRole playerRole) {
-        for (int i = 0; i < 12; ++i) {
+        for (int i = 0; i < BOARD_SIZE; ++i) {
             if (playerRole == AwaleRole.PLAYER1) {
                 this.nbOfSeedsWinPlayer1 += this.board[i];
             } else {
